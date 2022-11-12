@@ -58,7 +58,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.onChanged,
     this.excludeSelected = true,
     this.fillColor = Colors.white,
-  })  : assert(items.isNotEmpty, 'Items list must contain at least one item.'),
+   })  : //assert(items.isNotEmpty, 'Items list must contain at least one item.'),
         searchType = null,
         canCloseOutsideBounds = true,
         super(key: key);
@@ -83,7 +83,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.excludeSelected = true,
     this.canCloseOutsideBounds = true,
     this.fillColor = Colors.white,
-  })  : assert(items.isNotEmpty, 'Items list must contain at least one item.'),
+  })  : //assert(items.isNotEmpty, 'Items list must contain at least one item.'),
         searchType = _SearchType.onListData,
         super(key: key);
 

@@ -71,9 +71,9 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     if (widget.excludeSelected! &&
         widget.items.length > 1 &&
         widget.controller.text.isNotEmpty) {
-      items = widget.items.where((item) => widget.itemAsString!(item) != headerText).toList() as List<T>;
+      items = widget.items.where((item) => widget.itemAsString!(item) != headerText).toList();
     } else {
-      items = widget.items as List<T>;
+      items = widget.items;
     }
     filteredItems = items;
   }
