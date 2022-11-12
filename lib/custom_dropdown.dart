@@ -39,7 +39,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool? canCloseOutsideBounds;
   final _SearchType? searchType;
 
-  CustomDropdown({
+  const CustomDropdown({
     Key? key,
     this.items = const [],
     this.selectedItems = const [],
@@ -58,12 +58,12 @@ class CustomDropdown<T> extends StatefulWidget {
     this.onChanged,
     this.excludeSelected = true,
     this.fillColor = Colors.white,
-   })  : //assert(items.isNotEmpty, 'Items list must contain at least one item.'),
+  })  : //assert(items.isNotEmpty, 'Items list must contain at least one item.'),
         searchType = null,
         canCloseOutsideBounds = true,
         super(key: key);
 
-  CustomDropdown.search({
+  const CustomDropdown.search({
     Key? key,
     this.items = const [],
     this.selectedItems = const [],
@@ -94,18 +94,20 @@ class CustomDropdown<T> extends StatefulWidget {
 class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   final layerLink = LayerLink();
   TextEditingController controller = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    if (widget.items.isNotEmpty){
-      controller.text = widget.itemAsString(widget.items[0]);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     /// hint text
-    final hintText = widget.hintText ?? 'Select value';
+    String hintText = widget.hintText ?? 'Select value';
+    if(widget.items.isNotEmpty){
+      if (widget.selectedItem != null && widget.itemAsString(widget.selectedItem!) != '') {
+        hintText = widget.itemAsString(widget.selectedItem!);
+        controller.text = widget.itemAsString(widget.selectedItem!);
+      } else {
+          controller.text = widget.itemAsString(widget.items[0]);
+      }
+    }
+
 
     // hint style :: if provided then merge with default
     final hintStyle = const TextStyle(

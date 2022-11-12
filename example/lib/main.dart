@@ -81,6 +81,7 @@ class _HomeState extends State<Home> {
           CustomDropdown<String>.search(
             hintText: 'Select job role',
             items: list,
+            selectedItem: 'Student',
             itemAsString: (item) {
               return item;
             },
@@ -135,3 +136,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+

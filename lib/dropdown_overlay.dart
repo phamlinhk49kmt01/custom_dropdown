@@ -68,9 +68,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     });
 
     headerText = widget.controller.text;
-    if (widget.excludeSelected! &&
-        widget.items.length > 1 &&
-        widget.controller.text.isNotEmpty) {
+    if (widget.excludeSelected! && widget.items.length > 1 && widget.controller.text.isNotEmpty) {
       items = widget.items.where((item) => widget.itemAsString!(item) != headerText).toList();
     } else {
       items = widget.items;
@@ -94,9 +92,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
 
     // overlay icon
     final overlayIcon = Icon(
-      displayOverlayBottom
-          ? Icons.keyboard_arrow_up_rounded
-          : Icons.keyboard_arrow_down_rounded,
+      displayOverlayBottom ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
       color: Colors.black,
       size: 20,
     );
@@ -105,15 +101,13 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     final overlayOffset = Offset(-12, displayOverlayBottom ? 0 : 60);
 
     // list padding
-    final listPadding =
-        onListDataSearch ? const EdgeInsets.only(top: 8) : EdgeInsets.zero;
+    final listPadding = onListDataSearch ? const EdgeInsets.only(top: 8) : EdgeInsets.zero;
 
     // items list
     final list = items.isNotEmpty
         ? _ItemsList(
             scrollController: scrollController,
-            excludeSelected:
-                widget.items.length > 1 ? widget.excludeSelected! : false,
+            excludeSelected: widget.items.length > 1 ? widget.excludeSelected! : false,
             items: items,
             padding: listPadding,
             headerText: headerText,
@@ -124,8 +118,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                 widget.controller.text = widget.itemAsString(value);
               }
               setState(() => displayOverly = false);
-            }
-          )
+            })
         : const Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 12.0),
@@ -142,8 +135,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
           width: widget.size.width + 24,
           child: CompositedTransformFollower(
             link: widget.layerLink,
-            followerAnchor:
-                displayOverlayBottom ? Alignment.topLeft : Alignment.bottomLeft,
+            followerAnchor: displayOverlayBottom ? Alignment.topLeft : Alignment.bottomLeft,
             showWhenUnlinked: false,
             offset: overlayOffset,
             child: Container(
@@ -176,8 +168,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                           : null,
                       child: ClipRRect(
                         borderRadius: borderRadius,
-                        child: NotificationListener<
-                            OverscrollIndicatorNotification>(
+                        child: NotificationListener<OverscrollIndicatorNotification>(
                           onNotification: (notification) {
                             notification.disallowIndicator();
                             return true;
@@ -205,9 +196,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          headerText.isNotEmpty
-                                              ? headerText
-                                              : widget.hintText,
+                                          headerText.isNotEmpty ? headerText : widget.hintText,
                                           style: widget.headerStyle,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -223,7 +212,8 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                     items: filteredItems,
                                     onSearchedItems: (val) {
                                       setState(() => items = val as List<T>);
-                                    }, itemAsString:widget.itemAsString,
+                                    },
+                                    itemAsString: widget.itemAsString,
                                   ),
                                 items.length > 4 ? Expanded(child: list) : list
                               ],
@@ -273,7 +263,8 @@ class _ItemsList<T> extends StatelessWidget {
     required this.headerText,
     required this.onItemSelect,
     required this.padding,
-    this.itemTextStyle, required this.itemAsString,
+    this.itemTextStyle,
+    required this.itemAsString,
   }) : super(key: key);
 
   @override
@@ -322,7 +313,8 @@ class _SearchField<T> extends StatefulWidget {
   const _SearchField({
     Key? key,
     required this.items,
-    required this.onSearchedItems, required this.itemAsString,
+    required this.onSearchedItems,
+    required this.itemAsString,
   }) : super(key: key);
 
   @override
@@ -339,9 +331,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
   }
 
   void onSearch(String str) {
-    final result = widget.items
-        .where((item) => widget.itemAsString(item).toLowerCase().contains(str.toLowerCase()))
-        .toList();
+    final result = widget.items.where((item) => widget.itemAsString(item).toLowerCase().contains(str.toLowerCase())).toList();
     widget.onSearchedItems(result);
   }
 
