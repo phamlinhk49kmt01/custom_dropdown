@@ -10,6 +10,7 @@ part 'dropdown_overlay.dart';
 part 'overlay_builder.dart';
 
 typedef ItemAsString<T> = String Function(T item);
+typedef ValueChanged<T> = void Function(T value);
 
 enum _SearchType { onListData }
 
@@ -22,7 +23,6 @@ class CustomDropdown<T> extends StatefulWidget {
   ///selected items
   final List<T> selectedItems;
   final ItemAsString<T> itemAsString;
-  final TextEditingController controller;
   final String? hintText;
   final TextStyle? hintStyle;
   final TextStyle? selectedStyle;
@@ -33,7 +33,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final BorderSide? errorBorderSide;
   final BorderRadius? borderRadius;
   final Widget? fieldSuffixIcon;
-  final Function(T)? onChanged;
+  final ValueChanged<T>? onChanged;
   final bool? excludeSelected;
   final Color? fillColor;
   final bool? canCloseOutsideBounds;
@@ -45,7 +45,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.selectedItems = const [],
     this.selectedItem,
     required this.itemAsString,
-    required this.controller,
     this.hintText,
     this.hintStyle,
     this.selectedStyle,
@@ -60,10 +59,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.excludeSelected = true,
     this.fillColor = Colors.white,
   })  : assert(items.isNotEmpty, 'Items list must contain at least one item.'),
-        assert(
-          controller.text.isEmpty || items.contains(controller.text),
-          'Controller value must match with one of the item in items list.',
-        ),
         searchType = null,
         canCloseOutsideBounds = true,
         super(key: key);
@@ -74,7 +69,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.selectedItems = const [],
     this.selectedItem,
     required this.itemAsString,
-    required this.controller,
     this.hintText,
     this.hintStyle,
     this.selectedStyle,
@@ -90,10 +84,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.canCloseOutsideBounds = true,
     this.fillColor = Colors.white,
   })  : assert(items.isNotEmpty, 'Items list must contain at least one item.'),
-        assert(
-          controller.text.isEmpty || items.contains(controller.text),
-          'Controller value must match with one of the item in items list.',
-        ),
         searchType = _SearchType.onListData,
         super(key: key);
 
@@ -101,8 +91,16 @@ class CustomDropdown<T> extends StatefulWidget {
   _CustomDropdownState<T> createState() => _CustomDropdownState<T>();
 }
 
-class _CustomDropdownState<T>  extends State<CustomDropdown<T>> {
+class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   final layerLink = LayerLink();
+  TextEditingController controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    if (widget.items.isNotEmpty){
+      controller.text = widget.itemAsString(widget.items[0]);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,28 +120,35 @@ class _CustomDropdownState<T>  extends State<CustomDropdown<T>> {
       fontWeight: FontWeight.w500,
     ).merge(widget.selectedStyle);
 
+    onChange(String text) {
+      var d = widget.items.firstWhere((item) => widget.itemAsString(item) == text);
+      if (widget.onChanged != null) {
+        widget.onChanged!(d);
+      }
+    }
+
     return _OverlayBuilder<T>(
       overlay: (size, hideCallback) {
         return _DropdownOverlay<T>(
           items: widget.items,
-          controller: widget.controller,
+          controller: controller,
           size: size,
           layerLink: layerLink,
           hideOverlay: hideCallback,
-          headerStyle: widget.controller.text.isNotEmpty ? selectedStyle : hintStyle,
+          headerStyle: hintStyle,
           hintText: hintText,
           listItemStyle: widget.listItemStyle,
           excludeSelected: widget.excludeSelected,
           canCloseOutsideBounds: widget.canCloseOutsideBounds,
           searchType: widget.searchType,
-          itemAsString: widget.itemAsString
+          itemAsString: widget.itemAsString,
         );
       },
       child: (showCallback) {
         return CompositedTransformTarget(
           link: layerLink,
           child: _DropDownField(
-            controller: widget.controller,
+            controller: controller,
             onTap: showCallback,
             style: selectedStyle,
             borderRadius: widget.borderRadius,
@@ -154,8 +159,9 @@ class _CustomDropdownState<T>  extends State<CustomDropdown<T>> {
             hintStyle: hintStyle,
             hintText: hintText,
             suffixIcon: widget.fieldSuffixIcon,
-            onChanged: widget.onChanged,
+            onChanged: onChange,
             fillColor: widget.fillColor,
+            itemAsString: widget.itemAsString,
           ),
         );
       },

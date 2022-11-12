@@ -66,7 +66,6 @@ class _HomeState extends State<Home> {
           CustomDropdown(
             hintText: 'Select job role',
             items: list,
-            controller: jobRoleDropdownCtrl,
             excludeSelected: false,
             itemAsString: (item) {
               return '111';
@@ -82,9 +81,11 @@ class _HomeState extends State<Home> {
           CustomDropdown<String>.search(
             hintText: 'Select job role',
             items: list,
-            controller: jobRoleSearchDropdownCtrl,
             itemAsString: (item) {
               return item;
+            },
+            onChanged: (data) {
+              print(data);
             },
           ),
           const SizedBox(height: 24),
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
                 CustomDropdown(
                   hintText: 'Select job role',
                   items: list,
-                  controller: jobRoleFormDropdownCtrl,
+
                   excludeSelected: false,
                   itemAsString: (item) {
                     return 'xxx';

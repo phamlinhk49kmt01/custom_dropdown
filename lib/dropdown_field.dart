@@ -13,7 +13,8 @@ const _errorBorderSide = BorderSide(color: Colors.redAccent, width: 2);
 class _DropDownField<T> extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback onTap;
-  final Function(T)? onChanged;
+  final Function(String)? onChanged;
+  final ItemAsString<T> itemAsString;
   final String? hintText;
   final TextStyle? hintStyle;
   final TextStyle? style;
@@ -40,13 +41,14 @@ class _DropDownField<T> extends StatefulWidget {
     this.errorBorderSide,
     this.borderRadius,
     this.fillColor,
+    required this.itemAsString,
   }) : super(key: key);
 
   @override
-  State<_DropDownField> createState() => _DropDownFieldState();
+  State<_DropDownField<T>> createState() => _DropDownFieldState<T>();
 }
 
-class _DropDownFieldState extends State<_DropDownField> {
+class _DropDownFieldState<T> extends State<_DropDownField<T>> {
   String? prevText;
   bool listenChanges = true;
 
@@ -65,7 +67,7 @@ class _DropDownFieldState extends State<_DropDownField> {
   }
 
   @override
-  void didUpdateWidget(covariant _DropDownField oldWidget) {
+  void didUpdateWidget(covariant _DropDownField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.onChanged != null) {
       widget.controller.addListener(listenItemChanges);
@@ -78,7 +80,7 @@ class _DropDownFieldState extends State<_DropDownField> {
     if (listenChanges) {
       final text = widget.controller.text;
       if (prevText != null && prevText != text && text.isNotEmpty) {
-        widget.onChanged!(text);
+         widget.onChanged!(text);
       }
       prevText = text;
     }
